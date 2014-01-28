@@ -1,0 +1,17 @@
+{
+  "name": "webmaker-analytics",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mozilla/webmaker-analytics.git"
+  },
+  "license": "MPL-2.0",
+  "scripts": {
+    "test": "grunt"
+  },
+  "devDependencies": {
+    "grunt": "0.4.1",
+    "grunt-contrib-jshint": "0.7.1",
+    "grunt-contrib-qunit": "0.4.0"
+  }
+}

@@ -1,5 +1,10 @@
 {
   "name": "webmaker-analytics",
   "version": "0.0.1",
-  "main": "analytics.js"
+  "main": "analytics.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test"
+  ]
 }
