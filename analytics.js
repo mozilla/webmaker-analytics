@@ -14,10 +14,11 @@
    * Copyright 2008-2013 David Gouch. Licensed under the MIT License.
    * https://github.com/gouch/to-title-case
    */
-  function toTitleCase(){
+  function toTitleCase(s){
     var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
+    s = trim(s);
 
-    return this.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title){
+    return s.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title){
       if (index > 0 &&
           index + match.length !== title.length &&
           match.search(smallWords) > -1 &&
@@ -33,6 +34,18 @@
 
       return match.charAt(0).toUpperCase() + match.substr(1);
     });
+  }
+
+  // GA strings need to have leading/trailing whitespace trimmed, and not all
+  // browsers have String.prototoype.trim().
+  function trim(s) {
+    return s.replace(/^\s+|\s+$/g, '');
+  }
+
+  // See if s could be an email address. We don't want to send personal data like email.
+  function mightBeEmail(s) {
+    // There's no point trying to validate rfc822 fully, just look for ...@...
+    return (/[^@]+@[^@]+/).test(s);
   }
 
   function warn(msg) {
@@ -56,6 +69,10 @@
       warn("Expected `action` arg.");
       return;
     }
+    if(mightBeEmail(action)) {
+      warn("`action` arg looks like an email address, skipping.");
+      return;
+    }
     eventArgs.push(toTitleCase(action));
 
     // label: An optional string to provide additional dimensions to the event data.
@@ -63,7 +80,11 @@
       if(typeof label !== "string") {
         warn("Expected `label` arg to be a String.");
       } else {
-        eventArgs.push(label);
+        if(mightBeEmail(label)) {
+          warn("`label` arg looks like an email address, skipping.");
+        } else {
+          eventArgs.push(trim(label));
+        }
       }
     }
 
