@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mozilla/webmaker-analytics.png)](https://travis-ci.org/mozilla/webmaker-analytics)
+
 ### Webmaker Analytics
 
 Client-side analytics utilities for Webmaker apps.
