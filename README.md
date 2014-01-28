@@ -20,9 +20,9 @@ It takes two arguments:
 to define the type of user interaction for the web object. The `action` is converted
 to Title Case for consistency.
 * `options` - An optional set of extra arguments, which can include:
-..* `label` - An optional string to provide additional dimensions to the event data.
-..* `value` - An integer that you can use to provide numerical data about the user event.
-..* `noninteraction` - A boolean that when set to `true`, indicates that the event hit will
+  * `label` - An optional string to provide additional dimensions to the event data.
+  * `value` - An integer that you can use to provide numerical data about the user event.
+  * `noninteraction` - A boolean that when set to `true`, indicates that the event hit will
 not be used in bounce-rate calculation.
 
 NOTE: the data types of the optional properties on `options` are important, and mismatches
@@ -79,3 +79,15 @@ define(["analytics"], function(analytics) {
 
 });
 ```
+
+### Tests
+
+To run the tests, do the following:
+
+```
+$ npm install
+$ npm install -g grunt-cli
+$ grunt
+```
+
+You can also run the tests in a browser by browsing to `test/index.html`.
