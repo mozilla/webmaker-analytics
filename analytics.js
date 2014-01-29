@@ -7,7 +7,8 @@
 }(this, function() {
 
   // Use hostname for GA Category
-  var _category = location.hostname;
+  var _category = location.hostname,
+      _redacted = "REDACTED (Potential Email Address)";
 
   /**
    * To Title Case 2.1 - http://individed.com/code/to-title-case/
@@ -70,8 +71,8 @@
       return;
     }
     if(mightBeEmail(action)) {
-      warn("`action` arg looks like an email address, skipping.");
-      return;
+      warn("`action` arg looks like an email address, redacting.");
+      action = _redacted;
     }
     eventArgs.push(toTitleCase(action));
 
@@ -81,10 +82,10 @@
         warn("Expected `label` arg to be a String.");
       } else {
         if(mightBeEmail(label)) {
-          warn("`label` arg looks like an email address, skipping.");
-        } else {
-          eventArgs.push(trim(label));
+          warn("`label` arg looks like an email address, redacting.");
+          label = _redacted;
         }
+        eventArgs.push(trim(label));
       }
     }
 

@@ -43,13 +43,18 @@ test("Actions are trimmed", function() {
   deepEqual(_gaq, [eventArray]);
 });
 
-test("Actions containing email addresses are skipped", function() {
+test("Actions containing email addresses are redacted", function() {
+  var eventArray = createEventArray(),
+      eventName = "REDACTED (Potential Email Address)";
+
   analytics.event("email@address.com");
-  deepEqual(_gaq, []);
+
+  eventArray.push(eventName);
+  deepEqual(_gaq, [eventArray]);
 });
 
 test("Action is a required arg", function() {
-  analytics.event("email@address.com");
+  analytics.event();
   deepEqual(_gaq, []);
 });
 
@@ -91,11 +96,13 @@ test("Labels that are strings are trimmed", function() {
 test("Labels that are strings can't contain email addresses", function() {
   var eventArray = createEventArray(),
       eventName = "Simple",
-      labelName = "email@address.com";
+      labelName = "email@example.com",
+      labelNameRedacted = "REDACTED (Potential Email Address)";
 
   analytics.event(eventName, {label: labelName});
 
   eventArray.push(eventName);
+  eventArray.push(labelNameRedacted);
   deepEqual(_gaq, [eventArray]);
 });
 
