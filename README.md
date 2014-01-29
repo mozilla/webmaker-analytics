@@ -112,6 +112,7 @@ To run the tests, do the following:
 
 ```
 $ npm install
+$ npm install -g bower
 $ npm install -g grunt-cli
 $ grunt
 ```
