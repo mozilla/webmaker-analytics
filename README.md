@@ -13,28 +13,27 @@ do nothing.
 
 #### event(action, options)
 
-The `event` method is used to record
-[custom GA events](https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide).
-It takes two arguments:
+The `event` method is used to record custom GA events using either the old [ga.js API](https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide), or the newer [analytics.js API](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview).  It takes two arguments:
 * `action` - A required string that is uniquely paired with each category, and commonly used
 to define the type of user interaction for the web object. The `action` is converted
 to Title Case for consistency.
 * `options` - An optional set of extra arguments, which can include:
   * `label` - An optional string to provide additional dimensions to the event data.
   * `value` - An integer that you can use to provide numerical data about the user event.
-  * `noninteraction` - A boolean that when set to `true`, indicates that the event hit will
+  * `nonInteraction` - A boolean that when set to `true`, indicates that the event hit will
 not be used in bounce-rate calculation.
 
 NOTE: the data types of the optional properties on `options` are important, and mismatches
 will cause values to be ignored.
 
 Also be aware that any string (e.g., `action` or `label`) that look like an email address
-will cause the event to be skipped for privacy reasons. An email address is loosely
-defined as any string of the form "..@..".
+will cause the event to be redacted for privacy reasons (i.e., it will show up in your stats
+as "REDACTED (Potential Email Address)";). An email address is loosely defined as any string
+of the form "..@..".
 
 Each event will be tracked using the page's hostname as the GA Category automatically.
 
-Example 1:
+Example 1: Using the old GA ga.js _gaq API
 
 ```html
 <script type="text/javascript">
@@ -58,7 +57,7 @@ Example 1:
 </script>
 ```
 
-Example 2:
+Example 2: Used as part of a Require.js module
 
 ```javascript
 define(["analytics"], function(analytics) {
@@ -79,6 +78,33 @@ define(["analytics"], function(analytics) {
 
 });
 ```
+
+Example 3: Using new GA Analytics.js ga() API
+
+```html
+<head>
+...
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-XXXX-Y', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+</head>
+<script src="analytics.js"></script>
+<script>
+  ...
+  function playIntroVideo() {
+    analytics.event("Play", {label: "Main page welcome video"});
+    video.play();
+  }
+</script>
 
 ### Tests
 
