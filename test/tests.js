@@ -1,4 +1,4 @@
-module("event()", {
+module("event() - ga.js API", {
   setup: function() {
     _gaq = [];
   },
@@ -183,4 +183,154 @@ test("Multiple optional args are allowed", function() {
   eventArray.push(value);
   eventArray.push(noninteraction);
   deepEqual(_gaq, [eventArray]);
+});
+
+
+//---------------------------------------------------------------------------
+
+
+module("event() - analytics.js API", {
+  setup: function() {
+    _gaq = [];
+  },
+  teardown: function() {
+    _gaq = null;
+    ga = null;
+  }
+});
+
+test("Using ga() without optional args works as expected", function() {
+  var category = window.location.hostname,
+      action = "action",
+      actionTitleCase = "Action";
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionTitleCase);
+  };
+
+  analytics.event(action);
+});
+
+test("Using ga() with optional label works as expected", function() {
+  var category = window.location.hostname,
+      action = "action",
+      actionTitleCase = "Action",
+      label = "label";
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionTitleCase);
+    equal(fieldObject["eventLabel"], label);
+  };
+
+  analytics.event(action, {label: label});
+});
+
+test("Using ga() with optional label and value works as expected", function() {
+  var category = window.location.hostname,
+      action = "action",
+      actionTitleCase = "Action",
+      label = "label",
+      value = 1;
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionTitleCase);
+    equal(fieldObject["eventLabel"], label);
+    equal(fieldObject["eventValue"], value);
+  };
+
+  analytics.event(action, {label: label, value: value});
+});
+
+test("Using ga() with optional noninteraction works as expected", function() {
+  var category = window.location.hostname,
+      action = "action",
+      actionTitleCase = "Action",
+      nonInteraction = true;
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionTitleCase);
+    equal(fieldObject["nonInteraction"], nonInteraction);
+  };
+
+  analytics.event(action, {noninteraction: nonInteraction});
+});
+
+test("Using ga() with optional nonInteraction works as expected", function() {
+  var category = window.location.hostname,
+      action = "action",
+      actionTitleCase = "Action",
+      nonInteraction = true;
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionTitleCase);
+    equal(fieldObject["nonInteraction"], nonInteraction);
+  };
+
+  analytics.event(action, {nonInteraction: nonInteraction});
+});
+
+test("Missing action arg causes ga() to never fire", function() {
+  var count = 0;
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    count++;
+  };
+
+  analytics.event();
+  count++;
+  equal(count, 1);
+});
+
+test("Using ga() with action that looks like an email causes redaction", function() {
+  var category = window.location.hostname,
+      action = "email@address.com",
+      actionRedacted = "REDACTED (Potential Email Address)";
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], actionRedacted);
+  };
+
+  analytics.event(action);
+});
+
+test("Using ga() with label that looks like an email causes redaction", function() {
+  var category = window.location.hostname,
+      action = "Action",
+      label = "email@address.com",
+      labelRedacted = "REDACTED (Potential Email Address)";
+
+  // Provide a mock implementation of ga()
+  ga = function(cmd, fieldObject) {
+    equal(cmd, "send");
+    equal(fieldObject["hitType"], "event");
+    equal(fieldObject["eventCategory"], category);
+    equal(fieldObject["eventAction"], action);
+    equal(fieldObject["eventLabel"], labelRedacted);
+  };
+
+  analytics.event(action, {label: label});
 });

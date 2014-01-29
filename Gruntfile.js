@@ -4,7 +4,13 @@ module.exports = function(grunt) {
     jshint: {
       browser: {
         src: ['analytics.js'],
-        options: {}
+        options: {
+          sub: true,
+          globals: {
+            _gaq: true,
+            ga: true
+          }
+        }
       }
     },
     qunit: {

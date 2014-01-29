@@ -53,18 +53,53 @@
     console.warn("[analytics] " + msg);
   }
 
-  function getGAQueue() {
-    return _gaq || [];
+  // Support both types of Google Analytics Event Tracking, see:
+  // ga.js - https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide
+  // analytics.js - https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+  function _ga(options) {
+    // If the new analytics.js API is present, fire this event using ga().
+    if(typeof this.ga === "function") {
+      // Transform the argument array to match the expected call signature for ga(), see:
+      // https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview
+      var fieldObject = {
+        'hitType': 'event',
+        'eventCategory': _category,
+        'eventAction': options.action
+      };
+      if(options.label) {
+        fieldObject['eventLabel'] = options.label;
+      }
+      if(options.value) {
+        fieldObject['eventValue'] = options.value;
+      }
+      if(options.nonInteraction === true) {
+        fieldObject['nonInteraction'] = 1;
+      }
+      this.ga('send', fieldObject);
+    }
+
+    // Also support the old API. Google suggests firing data at both to be the right thing.
+    _gaq = _gaq || [];
+    var eventArgs = ['_trackEvent', _category, options.action];
+    if(options.label) {
+      eventArgs.push(options.label);
+    }
+    if(options.value) {
+      eventArgs.push(options.value);
+    }
+    if(options.nonInteraction === true) {
+      eventArgs.push(true);
+    }
+    _gaq.push(eventArgs);
   }
 
-  // Event Tracking, see:
-  // https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide
   function event(action, options) {
     options = options || {};
-    var eventArgs = ["_trackEvent", _category],
+    var eventOptions = {},
         label = options.label,
         value = options.value,
-        noninteraction = options.noninteraction;
+        // Support both forms to deal with typos between the 2 APIs
+        nonInteraction = options.noninteraction || options.nonInteraction;
 
     if(!action) {
       warn("Expected `action` arg.");
@@ -74,7 +109,7 @@
       warn("`action` arg looks like an email address, redacting.");
       action = _redacted;
     }
-    eventArgs.push(toTitleCase(action));
+    eventOptions.action = toTitleCase(action);
 
     // label: An optional string to provide additional dimensions to the event data.
     if(label) {
@@ -85,7 +120,7 @@
           warn("`label` arg looks like an email address, redacting.");
           label = _redacted;
         }
-        eventArgs.push(trim(label));
+        eventOptions.label = trim(label);
       }
     }
 
@@ -96,21 +131,21 @@
         warn("Expected `value` arg to be a Number.");
       } else {
         // Force value to int
-        eventArgs.push(value|0);
+        eventOptions.value = value|0;
       }
     }
 
     // noninteraction: An optional boolean that when set to true, indicates that
     // the event hit will not be used in bounce-rate calculation.
-    if(noninteraction) {
-      if(typeof noninteraction !== "boolean") {
+    if(nonInteraction) {
+      if(typeof nonInteraction !== "boolean") {
         warn("Expected `noninteraction` arg to be a Boolean.");
       } else {
-        eventArgs.push(noninteraction === true);
+        eventOptions.nonInteraction = nonInteraction === true;
       }
     }
 
-    getGAQueue().push(eventArgs);
+    _ga(eventOptions);
   }
 
   return {
