@@ -79,7 +79,7 @@
     }
 
     // Also support the old API. Google suggests firing data at both to be the right thing.
-    var _gaq = _gaq || [];
+    var queue = _gaq || [];
     var eventArgs = ['_trackEvent', _category, options.action];
     if(options.label) {
       eventArgs.push(options.label);
@@ -90,7 +90,7 @@
     if(options.nonInteraction === true) {
       eventArgs.push(true);
     }
-    _gaq.push(eventArgs);
+    queue.push(eventArgs);
   }
 
   function event(action, options) {
