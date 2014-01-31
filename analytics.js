@@ -6,6 +6,11 @@
   }
 }(this, function() {
 
+  // Make sure _gaq is on the global so we don't die trying to access it
+  if(!this._gaq) {
+    this._gaq = [];
+  }
+
   // Use hostname for GA Category
   var _category = location.hostname,
       _redacted = "REDACTED (Potential Email Address)";
@@ -79,7 +84,6 @@
     }
 
     // Also support the old API. Google suggests firing data at both to be the right thing.
-    var queue = _gaq || [];
     var eventArgs = ['_trackEvent', _category, options.action];
     if(options.label) {
       eventArgs.push(options.label);
@@ -90,7 +94,7 @@
     if(options.nonInteraction === true) {
       eventArgs.push(true);
     }
-    queue.push(eventArgs);
+    _gaq.push(eventArgs);
   }
 
   function event(action, options) {
