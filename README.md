@@ -117,6 +117,7 @@ ga('send', 'pageview');
     video.play();
   }
 </script>
+```
 
 ### Tests
 
