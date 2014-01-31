@@ -11,6 +11,18 @@ It assumes that the Google Analytics (GA) snippet has already been included and 
 in the containing page. If it has not, all analytic methods below will be NO-OPs and
 do nothing.
 
+The module is also installable via [Bower](http://bower.io/):
+
+```
+$ bower install webmaker-analytics
+```
+
+You then include the installed script like so:
+
+```html
+<script src="/bower_components/webmaker-analytics/analytics.js"></script>
+```
+
 #### event(action, options)
 
 The `event` method is used to record custom GA events using either the old [ga.js API](https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide), or the newer [analytics.js API](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview).  It takes two arguments:
