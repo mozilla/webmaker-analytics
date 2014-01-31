@@ -1,6 +1,5 @@
 {
   "name": "webmaker-analytics",
-  "version": "0.0.1",
   "main": "analytics.js",
   "devDependencies": {
     "qunit": "1.13.0"
