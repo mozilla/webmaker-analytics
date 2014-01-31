@@ -79,7 +79,7 @@
     }
 
     // Also support the old API. Google suggests firing data at both to be the right thing.
-    _gaq = _gaq || [];
+    var _gaq = _gaq || [];
     var eventArgs = ['_trackEvent', _category, options.action];
     if(options.label) {
       eventArgs.push(options.label);
