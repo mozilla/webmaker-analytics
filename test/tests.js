@@ -114,7 +114,7 @@ test("Values that are numbers are allowed", function() {
   analytics.event(eventName, {value: value});
 
   eventArray.push(eventName);
-  eventArray.push(value);
+  eventArray[4] = value;
   deepEqual(_gaq, [eventArray]);
 });
 
@@ -127,7 +127,7 @@ test("Values that are numbers are converted to ints", function() {
   analytics.event(eventName, {value: value});
 
   eventArray.push(eventName);
-  eventArray.push(valueInt);
+  eventArray[4] = valueInt;
   deepEqual(_gaq, [eventArray]);
 });
 
@@ -142,6 +142,18 @@ test("Values that aren't numbers are ignored", function() {
   deepEqual(_gaq, [eventArray]);
 });
 
+test("Values that are 0 are accepted", function() {
+  var eventArray = createEventArray(),
+      eventName = "Simple",
+      value = 0;
+
+  analytics.event(eventName, {value: value});
+
+  eventArray.push(eventName);
+  eventArray[4] = value;
+  deepEqual(_gaq, [eventArray]);
+});
+
 test("Non-Interaction boolean is allowed", function() {
   var eventArray = createEventArray(),
       eventName = "Simple",
@@ -150,7 +162,7 @@ test("Non-Interaction boolean is allowed", function() {
   analytics.event(eventName, {noninteraction: noninteraction});
 
   eventArray.push(eventName);
-  eventArray.push(noninteraction);
+  eventArray[5] = noninteraction;
   deepEqual(_gaq, [eventArray]);
 });
 

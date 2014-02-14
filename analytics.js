@@ -74,7 +74,7 @@
       if(options.label) {
         fieldObject['eventLabel'] = options.label;
       }
-      if(options.value) {
+      if(options.value || options.value === 0) {
         fieldObject['eventValue'] = options.value;
       }
       if(options.nonInteraction === true) {
@@ -86,13 +86,13 @@
     // Also support the old API. Google suggests firing data at both to be the right thing.
     var eventArgs = ['_trackEvent', _category, options.action];
     if(options.label) {
-      eventArgs.push(options.label);
+      eventArgs[3] = options.label;
     }
-    if(options.value) {
-      eventArgs.push(options.value);
+    if(options.value || options.value === 0) {
+      eventArgs[4] = options.value;
     }
     if(options.nonInteraction === true) {
-      eventArgs.push(true);
+      eventArgs[5] = true;
     }
     _gaq.push(eventArgs);
   }
@@ -130,7 +130,7 @@
 
     // value: An optional integer that you can use to provide numerical data about
     // the user event.
-    if(value) {
+    if(value || value === 0) {
       if(typeof value !== "number") {
         warn("Expected `value` arg to be a Number.");
       } else {
