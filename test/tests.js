@@ -11,6 +11,10 @@ function createEventArray() {
   return ["_trackEvent", window.location.hostname];
 }
 
+function createPageviewArray() {
+  return ["_trackPageview", "/virtual/simple"];
+}
+
 test("Simple event is logged", function() {
   var eventArray = createEventArray(),
       eventName = "Simple";
@@ -345,4 +349,56 @@ test("Using ga() with label that looks like an email causes redaction", function
   };
 
   analytics.event(action, {label: label});
+});
+
+
+//---------------------------------------------------------------------------
+
+module("virtualPageview() - ga.js API", {
+  setup: function() {
+    _gaq = [];
+  },
+  teardown: function() {
+    _gaq = null;
+  }
+});
+
+test("A virtual pageview is logged", function() {
+  var paveviewArray = createPageviewArray(),
+      pageviewPath = "simple";
+
+  analytics.virtualPageview(pageviewPath);
+  deepEqual(_gaq, [paveviewArray]);
+});
+
+test("Pageviews are trimmed", function() {
+  var paveviewArray = createPageviewArray(),
+      pageviewPath = "     simple      ";
+
+  analytics.virtualPageview(pageviewPath);
+  deepEqual(_gaq, [paveviewArray]);
+});
+
+test("A virtual pageview with a prefix '/' is logged", function() {
+  var paveviewArray = createPageviewArray(),
+      pageviewPath = "/simple";
+
+  analytics.virtualPageview(pageviewPath);
+  deepEqual(_gaq, [paveviewArray]);
+});
+
+test("A virtual pageview without a prefix '/' is logged", function() {
+  var paveviewArray = createPageviewArray(),
+      pageviewPath = "simple";
+
+  analytics.virtualPageview(pageviewPath);
+  deepEqual(_gaq, [paveviewArray]);
+});
+
+test("Don't use the prefix twice if the user passes this in", function() {
+  var paveviewArray = createPageviewArray(),
+      pageviewPath = "/virtual/simple";
+
+  analytics.virtualPageview(pageviewPath);
+  deepEqual(_gaq, [paveviewArray]);
 });
