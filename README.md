@@ -119,6 +119,28 @@ ga('send', 'pageview');
 </script>
 ```
 
+#### virtualPageview(virtualPagePath)
+
+##### What are Virtual Pageviews?
+
+Adapted From [Google's Documentation](https://developers.google.com/analytics/devguides/collection/gajs/asyncMigrationExamples#VirtualPageviews)
+
+> Use the `analytics.virtualPageview()` method along with a URL path you fabricate in order to track clicks from users that do not lead to actual website pages on your site. For example: a modal pop-up with a form a user needs to complete to progress is equivilent to a pageview even if it's loaded asynchronously. In general, we recommend you use `analytics.event()` for tracking downloads, outbound links, PDFs or similar kinds of user interactions within a page.
+> This is because virtual pageviews will add to your total pageview count. But if you need to track the sequentional user flow from actual pages to virtual pages, use virtual pageviews.
+
+The `virtualPageview` method is used to record custom GA virtualPageviews using either the old [ga.js API](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration#_gat.GA_Tracker_._trackPageview), or the newer [analytics.js API](https://developers.google.com/analytics/devguides/collection/analyticsjs/pages).
+
+It takes one argument:
+* `virtualPagePath` - A required string that is unique to the virtual pageview you want to track
+
+NOTE: the 'virtualPagePath' value will be prefixed in GA reports with `/virtual/` to distinguish these custom tracked 'hits' and to avoid clashes with existing (or potential page URLs).
+
+Usage is the same as the event() method documented above.
+
+```
+analytics.virtualPageview('create-user-account-modal');
+```
+
 ### Tests
 
 To run the tests, do the following:
