@@ -7,9 +7,9 @@ Client-side analytics utilities for Webmaker apps.
 ### Usage
 
 The `analytics` module can be used as part of an AMD module system, or on the global.
-It assumes that the Google Analytics (GA) snippet has already been included and setup
-in the containing page. If it has not, all analytic methods below will be NO-OPs and
-do nothing.
+It assumes that the Google Analytics (GA) snippet and/or the Optimizely tracking code
+has already been included and setup in the containing page. If it has not, all analytics
+methods below will be NO-OPs and do nothing.
 
 The module is also installable via [Bower](http://bower.io/):
 
@@ -139,6 +139,48 @@ Usage is the same as the event() method documented above.
 
 ```
 analytics.virtualPageview('create-user-account-modal');
+```
+
+#### conversionGoal(action, options)
+
+The `conversionGoal` method is used to record Optimizely [https://help.optimizely.com/hc/en-us/articles/200039925](Custom Event Goals) and [https://help.optimizely.com/hc/en-us/articles/200039865](Revenue Tracking).
+
+It takes two arguments:
+* `action` - A required string that is used in the Optimizely admin interface during experiment setup. This string must match exactly to count as a conversion in a given experiment. Unlike GA events, the Optimizely `action` is *not* converted to Title Case. Avoid using spaces.
+* `options` - An optional set of extra arguments:
+  * `valueInCents` - An optional integer that can be used to track revenue in A/B and multivariate testing experiments
+
+NOTE: the data types of the optional properties on `options` are important, and mismatches
+will cause values to be ignored.
+
+Include `webmaker-analtics` in your page as shown in the GA examples above. Either directly, or as part of a Require.js module.
+
+Example: Non-financial conversion
+
+```html
+<script src="//cdn.optimizely.com/js/XXXXXXXXXXXXXXXXX.js"></script>
+<script src="analytics.js"></script>
+<script>
+  ...
+  function createAccount() {
+    analytics.conversionGoal("WebmakerAccountCreated");
+    account.save();
+  }
+</script>
+```
+
+Example: Financial conversion
+
+```html
+<script src="//cdn.optimizely.com/js/XXXXXXXXXXXXXXXXX.js"></script>
+<script src="analytics.js"></script>
+<script>
+  ...
+  function showDonationThanks() {
+    analytics.conversionGoal("Donation", {valueInCents: 300});
+    // etc
+  }
+</script>
 ```
 
 ### Tests

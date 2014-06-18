@@ -351,7 +351,6 @@ test("Using ga() with label that looks like an email causes redaction", function
   analytics.event(action, {label: label});
 });
 
-
 //---------------------------------------------------------------------------
 
 module("virtualPageview() - ga.js API", {
@@ -401,4 +400,80 @@ test("Don't use the prefix twice if the user passes this in", function() {
 
   analytics.virtualPageview(pageviewPath);
   deepEqual(_gaq, [paveviewArray]);
+});
+
+//---------------------------------------------------------------------------
+
+
+module("conversionGoal() - optimizely API", {
+  setup: function() {
+    optimizely = [];
+  },
+  teardown: function() {
+    optimizely = null;
+  }
+});
+
+function createOptimizelyEventArray() {
+  return ["_trackEvent"];
+}
+
+test("Simple conversionGoal is logged", function() {
+  var eventArray = createOptimizelyEventArray(),
+      eventName = "Simple";
+
+  analytics.conversionGoal(eventName);
+
+  eventArray.push(eventName);
+  deepEqual(optimizely, [eventArray]);
+});
+
+test("Actions are trimmed", function() {
+  var eventArray = createOptimizelyEventArray(),
+      eventName = "     Simple      ",
+      eventNameTitleCase = "Simple";
+
+  analytics.conversionGoal(eventName);
+
+  eventArray.push(eventNameTitleCase);
+  deepEqual(optimizely, [eventArray]);
+});
+
+test("Action is a required arg", function() {
+  analytics.conversionGoal();
+  deepEqual(optimizely, []);
+});
+
+test("ValueInCents that are integers are allowed", function() {
+  var eventArray = createOptimizelyEventArray(),
+      eventName = "Simple",
+      valueInCents = 1;
+
+  analytics.conversionGoal(eventName, {valueInCents: valueInCents});
+
+  eventArray.push(eventName);
+  eventArray[2] = {revenue:valueInCents};
+  deepEqual(optimizely, [eventArray]);
+});
+
+test("ValueInCents that aren't integers are ignored", function() {
+  var eventArray = createOptimizelyEventArray(),
+      eventName = "Simple",
+      valueInCents = "1";
+
+  analytics.conversionGoal(eventName, {valueInCents: valueInCents});
+
+  eventArray.push(eventName);
+  deepEqual(optimizely, [eventArray]);
+});
+
+test("ValueInCents that are 0 are accepted (but skipped)", function() {
+  var eventArray = createOptimizelyEventArray(),
+      eventName = "Simple",
+      valueInCents = 0;
+
+  analytics.conversionGoal(eventName, {valueInCents: valueInCents});
+
+  eventArray.push(eventName);
+  deepEqual(optimizely, [eventArray]);
 });

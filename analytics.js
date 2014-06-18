@@ -11,6 +11,11 @@
     this._gaq = [];
   }
 
+  // Make sure optimizely is on the global so we don't die trying to access it
+  if(!this.optimizely) {
+    this.optimizely = [];
+  }
+
   // Use hostname for GA Category
   var _category = location.hostname,
       _redacted = "REDACTED (Potential Email Address)";
@@ -196,9 +201,48 @@
     _gaVirtualPageView(eventOptions);
   }
 
+
+  function _optimizely(options) {
+    var eventArgs = ['_trackEvent', options.action];
+
+    // check if we are giving this conversion financial value
+    if (options.revenue) {
+      var args = {
+        revenue: options.revenue
+      };
+      eventArgs[2] = args;
+    }
+
+    optimizely.push(eventArgs);
+  }
+
+  function conversionGoal(action, options) {
+    options = options || {};
+    var eventOptions = {},
+        valueInCents = options.valueInCents;
+
+    if(!action) {
+      warn("Expected `action` arg.");
+      return;
+    }
+    eventOptions.action = trim(action);
+
+    // valueInCents: An optional integer to track revenue - for example from fundraising appeal.
+    if(valueInCents) {
+      if((typeof valueInCents === 'number') && (valueInCents % 1 === 0)) {
+        eventOptions.revenue = valueInCents;
+      } else {
+        warn("Expected `valueInCents` arg to be an integer.");
+      }
+    }
+
+    _optimizely(eventOptions);
+  }
+
   return {
     event: event,
-    virtualPageview: virtualPageview
+    virtualPageview: virtualPageview,
+    conversionGoal: conversionGoal
   };
 
 }));
