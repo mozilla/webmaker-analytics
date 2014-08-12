@@ -203,7 +203,7 @@
 
 
   function _optimizely(options) {
-    var eventArgs = ['_trackEvent', options.action];
+    var eventArgs = ['trackEvent', options.action];
 
     // check if we are giving this conversion financial value
     if (options.revenue) {
