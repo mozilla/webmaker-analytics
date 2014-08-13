@@ -23,6 +23,16 @@ You then include the installed script like so:
 <script src="/bower_components/webmaker-analytics/analytics.js"></script>
 ```
 
+#### Load order
+If firing an `analytics.event(action)` on pageload, this should happen after the GA script `_setAccount` has been declared.
+```
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXX-X']);
+_gaq.push(['_trackPageview']);
+(function() ...
+```
+The `event(action)` pushes your custom events to the `_gaq` array and GA will discard any items in the array before the `_setAccount`. [Further info](http://stackoverflow.com/questions/14665816/google-analytics-trackevent-before-setaccount-does-order-matter).
+
 #### event(action, options)
 
 The `event` method is used to record custom GA events using either the old [ga.js API](https://developers.google.com/analytics/devguides/collection/gajs/eventTrackerGuide), or the newer [analytics.js API](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview).  It takes two arguments:
