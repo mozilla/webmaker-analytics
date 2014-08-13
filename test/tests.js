@@ -415,7 +415,7 @@ module("conversionGoal() - optimizely API", {
 });
 
 function createOptimizelyEventArray() {
-  return ["_trackEvent"];
+  return ["trackEvent"];
 }
 
 test("Simple conversionGoal is logged", function() {
