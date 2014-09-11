@@ -1,6 +1,7 @@
 {
   "name": "webmaker-analytics",
   "version": "0.1.4",
+  "main": "analytics.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mozilla/webmaker-analytics.git"
