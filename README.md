@@ -153,7 +153,7 @@ analytics.virtualPageview('create-user-account-modal');
 
 #### conversionGoal(action, options)
 
-The `conversionGoal` method is used to record Optimizely [https://help.optimizely.com/hc/en-us/articles/200039925](Custom Event Goals) and [https://help.optimizely.com/hc/en-us/articles/200039865](Revenue Tracking).
+The `conversionGoal` method is used to record Optimizely [Custom Event Goals](https://help.optimizely.com/hc/en-us/articles/200039925) and [Revenue Tracking](https://help.optimizely.com/hc/en-us/articles/200039865).
 
 It takes two arguments:
 * `action` - A required string that is used in the Optimizely admin interface during experiment setup. This string must match exactly to count as a conversion in a given experiment. Unlike GA events, the Optimizely `action` is *not* converted to Title Case. Avoid using spaces.
